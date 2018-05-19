@@ -196,8 +196,8 @@ int main(int argc, char **argv)
         digitalWrite(RF_LED_PIN, HIGH);
 #endif
     ///////////////////////////////////////////////////
-	// DS18b20 Temperature sensor
-	///////////////////////////////////////////////////
+    // DS18b20 Temperature sensor
+    ///////////////////////////////////////////////////
 		
 	char path[50] = "/sys/bus/w1/devices/";
 	char rom[20];
@@ -259,18 +259,18 @@ int main(int argc, char **argv)
 	//printf("Temperature: %s\n", c);
 			
     ///////////////////////////////////////////////////
-	// DS18b20 Temperature sensor
-	///////////////////////////////////////////////////
+    // DS18b20 Temperature sensor
+    ///////////////////////////////////////////////////
 		
 	
     // Send Temperature data to rf95_server
     //uint8_t data[] = "Hi Hackster !";
-	uint8_t * data = (uint8_t *)c;
-	uint8_t len = sizeof(data);
+    uint8_t * data = (uint8_t *)c;
+    uint8_t len = sizeof(data);
     printf("Sending %02d bytes to node #%d => ", len, RF_GATEWAY_ID );
     printbuffer(data, len);
     printf("\n" );
-    f95.send(data, len);
+    rf95.send(data, len);
     rf95.waitPacketSent();
         
     }
