@@ -23,9 +23,14 @@
 // Uncomment the board you have, if not listed 
 // uncommment custom board and set wiring tin custom section
 
+
 // LoRasPi board 
 // see https://github.com/hallard/LoRasPI
 #define BOARD_LORASPI
+
+// Adafruit RFM95W LoRa Radio Transceiver Breakout
+// see https://www.adafruit.com/product/3072
+//#define BOARD_ADAFRUIT_RFM95W
 
 // iC880A and LinkLab Lora Gateway Shield (if RF module plugged into)
 // see https://github.com/ch2i/iC880A-Raspberry-PI
