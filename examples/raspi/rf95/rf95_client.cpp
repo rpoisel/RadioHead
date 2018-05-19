@@ -10,7 +10,8 @@
 // sudo ./rf95_client
 //
 // Contributed by Charles-Henri Hallard based on sample RH_NRF24 by Mike Poublon
-// Edited by : Ramin Sangesari
+// Edited by: Ramin Sangesari
+// https://www.hackster.io/idreams/
 
 #include <bcm2835.h>
 #include <stdio.h>
@@ -35,6 +36,10 @@
 // LoRasPi board 
 // see https://github.com/hallard/LoRasPI
 #define BOARD_DRAGINO_PIHAT
+
+// Adafruit RFM95W LoRa Radio Transceiver Breakout
+// see https://www.adafruit.com/product/3072
+//#define BOARD_ADAFRUIT_RFM95W
 
 // iC880A and LinkLab Lora Gateway Shield (if RF module plugged into)
 // see https://github.com/ch2i/iC880A-Raspberry-PI
@@ -190,82 +195,82 @@ int main(int argc, char **argv)
         digitalWrite(RF_LED_PIN, HIGH);
 #endif
         ///////////////////////////////////////////////////
-        // DS18b20 Temperature sensor
+		// DS18b20 Temperature sensor
+		///////////////////////////////////////////////////
+		
+		char path[50] = "/sys/bus/w1/devices/";
+		char rom[20];
+		char buf[100];
+		DIR *dirp;
+		struct dirent *direntp;
+		int fd =-1;
+		char *temp;
+		float value;
+		// These tow lines mount the device:
+		system("sudo modprobe w1-gpio");
+		system("sudo modprobe w1-therm");
+		// Check if /sys/bus/w1/devices/ exists.
+		if((dirp = opendir(path)) == NULL)
+		{
+			printf("opendir error\n");
+			return 1;
+		}
+		// Reads the directories or files in the current directory.
+		while((direntp = readdir(dirp)) != NULL)
+		{
+			// If 28-00000 is the substring of d_name,
+			// then copy d_name to rom and print rom.  
+			if(strstr(direntp->d_name,"28-00000"))
+			{
+				strcpy(rom,direntp->d_name);
+				//printf(" rom: %s\n",rom);
+			}
+		}
+		closedir(dirp);
+		// Append the String rom and "/w1_slave" to path
+		// path becomes to "/sys/bus/w1/devices/28-00000xxxx/w1_slave"
+		strcat(path,rom);
+		strcat(path,"/w1_slave");
+		// Open the file in the path.
+		if((fd = open(path,O_RDONLY)) < 0)
+		{
+			printf("open error\n");
+			return 1;
+		}
+		// Read the file
+		if(read(fd,buf,sizeof(buf)) < 0)
+		{
+			printf("read error\n");
+			return 1;
+		}
+		// Returns the first index of 't'.
+		temp = strchr(buf,'t');
+		
+		// Read the string following "t=".
+		sscanf(temp,"t=%s",temp);
+			
+		// atof: changes string to float.
+		value = atof(temp)/1000;
+		char c[50]; //size of the number
+		//sprintf(c, "%.2f °C", value);
+		sprintf(c, "%.2f", value);
+		
+		//printf("Temperature: %s\n", c);
+			
         ///////////////////////////////////////////////////
-
-        char path[50] = "/sys/bus/w1/devices/";
-        char rom[20];
-        char buf[100];
-        DIR *dirp;
-        struct dirent *direntp;
-        int fd =-1;
-        char *temp;
-        float value;
-        // These tow lines mount the device:
-        system("sudo modprobe w1-gpio");
-        system("sudo modprobe w1-therm");
-        // Check if /sys/bus/w1/devices/ exists.
-        if((dirp = opendir(path)) == NULL)
-        {
-          printf("opendir error\n");
-          return 1;
-        }
-        // Reads the directories or files in the current directory.
-        while((direntp = readdir(dirp)) != NULL)
-        {
-          // If 28-00000 is the substring of d_name,
-          // then copy d_name to rom and print rom.  
-          if(strstr(direntp->d_name,"28-00000"))
-          {
-            strcpy(rom,direntp->d_name);
-            //printf(" rom: %s\n",rom);
-          }
-        }
-        closedir(dirp);
-        // Append the String rom and "/w1_slave" to path
-        // path becomes to "/sys/bus/w1/devices/28-00000xxxx/w1_slave"
-        strcat(path,rom);
-        strcat(path,"/w1_slave");
-        // Open the file in the path.
-        if((fd = open(path,O_RDONLY)) < 0)
-        {
-          printf("open error\n");
-          return 1;
-        }
-        // Read the file
-        if(read(fd,buf,sizeof(buf)) < 0)
-        {
-          printf("read error\n");
-          return 1;
-        }
-        // Returns the first index of 't'.
-        temp = strchr(buf,'t');
-
-        // Read the string following "t=".
-        sscanf(temp,"t=%s",temp);
-
-        // atof: changes string to float.
-        value = atof(temp)/1000;
-        char c[50]; //size of the number
-        //sprintf(c, "%.2f °C", value);
-        sprintf(c, "%.2f", value);
-
-        //printf("Temperature: %s\n", c);
-
-            ///////////////////////////////////////////////////
-        // DS18b20 Temperature sensor
-        ///////////////////////////////////////////////////
+		// DS18b20 Temperature sensor
+		///////////////////////////////////////////////////
 		
 	
-        // Send Temperature data to rf95_server
-        //uint8_t data[] = "Hi Hackster !";
-		    uint8_t * data = (uint8_t *)c;
-		    uint8_t len = sizeof(data);
-        printf("Sending %02d bytes to node #%d => ", len, RF_GATEWAY_ID );
-        printbuffer(data, len);
-        printf("\n" );
-        rf95.send(data, len);
-        rf95.waitPacketSent();
+    // Send Temperature data to rf95_server
+    //uint8_t data[] = "Hi Hackster !";
+		uint8_t * data = (uint8_t *)c;
+		uint8_t len = sizeof(data);
+    printf("Sending %02d bytes to node #%d => ", len, RF_GATEWAY_ID );
+    printbuffer(data, len);
+    printf("\n" );
+    f95.send(data, len);
+    rf95.waitPacketSent();
         
       }
 
