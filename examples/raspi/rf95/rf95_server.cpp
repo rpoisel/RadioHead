@@ -185,6 +185,7 @@ int main (int argc, const char* argv[] )
             printf("From: [#%d] => Temperature: ", to);
             //printf("Packet[%02d] #%d => #%d %ddB: ", len, from, to, rssi);
             printbuffer(buf, len);
+            printf(" °C");
           } else {
             Serial.print("receive failed");
           }
