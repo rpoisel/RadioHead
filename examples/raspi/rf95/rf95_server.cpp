@@ -10,6 +10,8 @@
 // sudo ./rf95_server
 //
 // Contributed by Charles-Henri Hallard based on sample RH_NRF24 by Mike Poublon
+// Edited by: Ramin Sangesari
+// https://www.hackster.io/idreams/
 
 #include <bcm2835.h>
 #include <stdio.h>
@@ -78,7 +80,7 @@ int main (int argc, const char* argv[] )
     return 1;
   }
   
-  printf( "RF95 CS=GPIO%d", RF_CS_PIN);
+  //printf( "RF95 CS=GPIO%d", RF_CS_PIN);
 
 #ifdef RF_LED_PIN
   pinMode(RF_LED_PIN, OUTPUT);
@@ -86,7 +88,7 @@ int main (int argc, const char* argv[] )
 #endif
 
 #ifdef RF_IRQ_PIN
-  printf( ", IRQ=GPIO%d", RF_IRQ_PIN );
+  //printf( ", IRQ=GPIO%d", RF_IRQ_PIN );
   // IRQ Pin input/pull down
   pinMode(RF_IRQ_PIN, INPUT);
   bcm2835_gpio_set_pud(RF_IRQ_PIN, BCM2835_GPIO_PUD_DOWN);
@@ -95,7 +97,7 @@ int main (int argc, const char* argv[] )
 #endif
   
 #ifdef RF_RST_PIN
-  printf( ", RST=GPIO%d", RF_RST_PIN );
+  //printf( ", RST=GPIO%d", RF_RST_PIN );
   // Pulse a reset on module
   pinMode(RF_RST_PIN, OUTPUT);
   digitalWrite(RF_RST_PIN, LOW );
@@ -105,7 +107,7 @@ int main (int argc, const char* argv[] )
 #endif
 
 #ifdef RF_LED_PIN
-  printf( ", LED=GPIO%d", RF_LED_PIN );
+  //printf( ", LED=GPIO%d", RF_LED_PIN );
   digitalWrite(RF_LED_PIN, LOW );
 #endif
 
@@ -148,8 +150,8 @@ int main (int argc, const char* argv[] )
     // We're ready to listen for incoming message
     rf95.setModeRx();
 
-    printf( " OK NodeID=%d @ %3.2fMHz\n", RF_NODE_ID, RF_FREQUENCY );
-    printf( "Listening packet...\n" );
+    //printf( " OK NodeID=%d @ %3.2fMHz\n", RF_NODE_ID, RF_FREQUENCY );
+    //printf( "Listening packet...\n" );
 
     //Begin the main body of code
     while (!force_exit) {
@@ -180,7 +182,8 @@ int main (int argc, const char* argv[] )
           int8_t rssi  = rf95.lastRssi();
           
           if (rf95.recv(buf, &len)) {
-            printf("Packet[%02d] #%d => #%d %ddB: ", len, from, to, rssi);
+            printf("From: [#%d] => Temperature: ", to);
+            //printf("Packet[%02d] #%d => #%d %ddB: ", len, from, to, rssi);
             printbuffer(buf, len);
           } else {
             Serial.print("receive failed");
