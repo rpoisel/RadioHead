@@ -73,7 +73,7 @@ int main (int argc, const char* argv[] )
   unsigned long led_blink = 0;
   
   signal(SIGINT, sig_handler);
-  printf( "%s\n", __BASEFILE__);
+  //printf( "%s\n", __BASEFILE__);
 
   if (!bcm2835_init()) {
     fprintf( stderr, "%s bcm2835_init() Failed\n\n", __BASEFILE__ );

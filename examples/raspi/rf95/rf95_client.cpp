@@ -270,7 +270,7 @@ int main(int argc, char **argv)
     printf("Sending %02d bytes to node #%d => ", len, RF_GATEWAY_ID );
     printbuffer(data, len);
     printf("\n" );
-    f95.send(data, len);
+    rf95.send(data, len);
     rf95.waitPacketSent();
         
     }
