@@ -6,7 +6,7 @@ How to get temperature sensor data from a remote Raspberry Pi via Wireless LoRa 
 https://www.hackster.io/idreams/getting-started-with-lora-fd69d1
 
 
-Orginal Repo:
+Original Repo:
 ```
 https://github.com/hallard/RadioHead
 ```
