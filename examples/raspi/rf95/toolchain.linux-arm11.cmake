@@ -1,0 +1,16 @@
+set(RASPBERRY_DIR_BASE /usr/local/toolchains/armv6-logicals-linux-gnueabihf)
+set(RASPBERRY_DIR_COMPILER ${RASPBERRY_DIR_BASE}/bin)
+
+set(CMAKE_C_COMPILER ${RASPBERRY_DIR_COMPILER}/armv6-logicals-linux-gnueabihf-gcc)
+set(CMAKE_CXX_COMPILER ${RASPBERRY_DIR_COMPILER}/armv6-logicals-linux-gnueabihf-g++)
+set(RTS_PACKAGE_EXTRA_LINUX DEB)
+
+# Name of the target platform
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+
+# compiler flags
+set(CMAKE_C_FLAGS "--std=gnu99 -Werror=implicit-function-declaration" CACHE STRING "" FORCE)
+
+set(CMAKE_CXX_CREATE_SHARED_LIBRARY "<CMAKE_CXX_COMPILER> <CMAKE_SHARED_LIBRARY_CXX_FLAGS> <LANGUAGE_COMPILE_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <SONAME_FLAG><TARGET_SONAME> -o <TARGET> -Wl,--start-group <OBJECTS> <LINK_LIBRARIES> -Wl,--end-group")
+set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> -Wl,--start-group <OBJECTS> <LINK_LIBRARIES> -Wl,--end-group -o <TARGET>")
